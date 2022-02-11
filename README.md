@@ -4,7 +4,7 @@ Repository for the Twitch series on building our On Air Lamp
 ## Project explanation
 We are building a lamp that will turn on as soon, as the [arconsis Twitch stream](https://www.twitch.tv/arconsis) goes live.
 
-The lamp is a chap lamp from amazon that runs on battery and USB power. It has three states - off, fading in to on, pulsing.
+The lamp is a cheap lamp from amazon that runs on battery and USB power. It has three states - off, fading in to on, pulsing.
 
 To control the lamp we are using a NodeMCU with an ESP8266 on it. 
 
