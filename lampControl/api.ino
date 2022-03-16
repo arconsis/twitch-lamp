@@ -4,60 +4,54 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-HTTPClient sender;
+HTTPClient client;
 WiFiClient wifiClient;
 
-void setupAPI() {
-  Serial.println();
-
+void initializeAPI() {
   Serial.print("Connecting");
   WiFi.begin(wifiSSID, wifiPassword);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while(WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
   Serial.println();
 
-  Serial.print("IP Address: ");
+  Serial.print("Connected with IP address: ");
   Serial.println(WiFi.localIP());
-
-  //wifiClient.setInsecure();
 }
 
 bool isOnline() {
-  if (sender.begin(wifiClient, "http://192.168.2.138:8000/online.json")) {
-    int httpStatusCode = sender.GET();
-    bool success;
-    
-    if (httpStatusCode == 200) {
-      String payload = sender.getString();
+  if (client.begin(wifiClient, "http://192.168.2.138:8000/online.json")) {
+    int statusCode = client.GET();
+    bool online;
 
-      Serial.println("Received:");
+    Serial.print("Request finished with: ");
+    Serial.println(statusCode);
+
+    if (statusCode == 200) {
+      String payload = client.getString();
+      Serial.print("Received from server: ");
       Serial.println(payload);
 
       DynamicJsonDocument response(1024);
       DeserializationError error = deserializeJson(response, payload);
+
       if (error) {
-        success = false;
-      } else {
-        bool online = response["online"];
-        Serial.print("Online state: ");
-        Serial.println(online);
-        
-        success = online;
+        Serial.println("JSON parsing failed");
+        return false;
       }
+
+      online = response["online"];
+      Serial.print("Online state: ");
+      Serial.println(online);
     } else {
-      Serial.print("Failed to get response from backend. Failed with");
-      Serial.println(httpStatusCode);
-
-      success = false;
+      Serial.println("Failed to read online status from server");
+      online = false;
     }
-    
-    sender.end();
 
-    return success;
-  }
+    return online;
+  } 
 
   return false;
 }

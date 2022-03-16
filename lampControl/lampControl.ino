@@ -1,15 +1,17 @@
 #define button 5  // pressed is LOW
 
+
 int lastButtonState = HIGH; // HIGH by default because of INPUT_PULLUP
 int lastCheck = 0;
 
 void setup() {
   Serial.begin(9600);
-
-  setupAPI();
-  setupLEDs();
+  Serial.println();
 
   pinMode(button, INPUT_PULLUP);
+  
+  initializeLEDs();
+  initializeAPI();
 }
 
 void loop() {
@@ -28,15 +30,15 @@ void loop() {
   int currentTime = millis();
 
   if (currentTime - lastCheck > 5000) {
-    Serial.println("Checking API");
+    bool online = isOnline();
     lastCheck = currentTime;
 
-    bool online = isOnline();
-
     if (online) {
-      turnOn();
+      Serial.println("Toggle LED because we are online");
+      turnOnLamp();
     } else {
-      turnOff();
+      Serial.println("We are not online");
+      turnOffLamp();
     }
   }
 }
