@@ -1,24 +1,17 @@
-#define led 16    // LOW sends the signal
 #define button 5  // pressed is LOW
-#define relay 4   // HIGH switches on
-#define light 2 
 
-int ledState = 0; // 0 = off; 1 = fade in; 2 = pulse
+
 int lastButtonState = HIGH; // HIGH by default because of INPUT_PULLUP
+int lastCheck = 0;
 
 void setup() {
   Serial.begin(9600);
-  
-  pinMode(led, OUTPUT);
-  pinMode(relay, OUTPUT);
-  pinMode(light, OUTPUT);
+  Serial.println();
+
   pinMode(button, INPUT_PULLUP);
   
-  delay(1000);
-
-  digitalWrite(light, HIGH); // light is off on HIGH
-  digitalWrite(led, HIGH);   // switch is active LOW, so we need HIGH by default
-  digitalWrite(relay, HIGH); // turn on light strip by switching on the relay
+  initializeLEDs();
+  initializeAPI();
 }
 
 void loop() {
@@ -29,32 +22,23 @@ void loop() {
     lastButtonState = value;
 
     if (value == LOW) {
+      Serial.println("Button pressed");
       toggleLedState();   
     }
   }
 
-// Toggle light on NodeMCU for debugging
-  if (ledState == 0) {
-    digitalWrite(light, HIGH);
-  } else {
-    digitalWrite(light, LOW);
-  }
-}
+  int currentTime = millis();
 
-void toggleLedState() {
-  if (ledState == 0) {
-    simulateButtonPress();
-    ledState = 1;
-  } else {
-    simulateButtonPress();
-    simulateButtonPress();
-    ledState = 0;
-  }
-}
+  if (currentTime - lastCheck > 5000) {
+    bool online = isOnline();
+    lastCheck = currentTime;
 
-void simulateButtonPress() {
-  digitalWrite(led, LOW);
-  delay(100);
-  digitalWrite(led, HIGH);   
-  delay(100);
+    if (online) {
+      Serial.println("Toggle LED because we are online");
+      turnOnLamp();
+    } else {
+      Serial.println("We are not online");
+      turnOffLamp();
+    }
+  }
 }
