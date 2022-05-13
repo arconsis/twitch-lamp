@@ -1,4 +1,4 @@
-#define led 16    // LOW sends the signal
+#define led 0    // LOW sends the signal
 #define relay 4   // HIGH switches on
 #define light 2
 
@@ -54,8 +54,6 @@ void turnOffLed() {
 }
 
 void toggleLedState() {
-  bool relayState = digitalRead();
-  
   if (ledState == 0) {
     turnOnLed();
   } else {

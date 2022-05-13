@@ -1,44 +1,28 @@
-#define button 5  // pressed is LOW
+int milliSecondsPerMinute = 60 * 1000;
+int microSecondsPerMinute = milliSecondsPerMinute * 1000;
 
-
-int lastButtonState = HIGH; // HIGH by default because of INPUT_PULLUP
-int lastCheck = 0;
+double offlinePollingInterval = 5; // in microseconds
+double onlinePollingInterval = 1;
 
 void setup() {
   Serial.begin(9600);
   Serial.println();
-
-  pinMode(button, INPUT_PULLUP);
   
   initializeLEDs();
   initializeAPI();
 }
 
 void loop() {
-  int value = digitalRead(button);
+  bool online = isOnlineOnTwitch();
 
-// handle button press
-  if (value != lastButtonState) {
-    lastButtonState = value;
-
-    if (value == LOW) {
-      Serial.println("Button pressed");
-      toggleLedState();   
-    }
-  }
-
-  int currentTime = millis();
-
-  if (currentTime - lastCheck > 5000) {
-    bool online = isOnline();
-    lastCheck = currentTime;
-
-    if (online) {
-      Serial.println("Toggle LED because we are online");
-      turnOnLamp();
-    } else {
-      Serial.println("We are not online");
-      turnOffLamp();
-    }
+  if (online) {
+    Serial.println("Toggle LED because we are online");
+    turnOnLamp();
+    delay(onlinePollingInterval * milliSecondsPerMinute);
+  } else {
+    Serial.println("We are not online");
+    turnOffLamp();
+    Serial.print("Going to bed");
+    ESP.deepSleep(offlinePollingInterval * microSecondsPerMinute);   
   }
 }
