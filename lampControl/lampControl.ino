@@ -1,8 +1,14 @@
 int milliSecondsPerMinute = 60 * 1000;
 int microSecondsPerMinute = milliSecondsPerMinute * 1000;
 
-double offlinePollingInterval = 5; // in microseconds
+double offlinePollingInterval = 1; // in minutes
 double onlinePollingInterval = 1;
+
+// current consumption
+// controller             ~30 mA
+// relay                  ~60 mA
+// internet connection    ~50 mA
+// leds                   ~50 mA
 
 void setup() {
   Serial.begin(9600);

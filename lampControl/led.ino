@@ -16,7 +16,7 @@ void initializeLEDs() {
 
   digitalWrite(light, HIGH); // light is off on HIGH
   digitalWrite(led, HIGH);   // switch is active LOW, so we need HIGH by default
-  digitalWrite(relay, HIGH); // turn on light strip by switching on the relay
+  digitalWrite(relay, LOW); // turn on light strip by switching on the relay
   Serial.println("Initializing LEDs done");
 }
 

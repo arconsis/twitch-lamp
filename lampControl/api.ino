@@ -9,7 +9,7 @@ String twitchApiEndpoint = "https://api.twitch.tv/helix/streams?user_login=arcon
 const char *twitchApiFingerprint = "0E 27 ED A3 7D CA 6E FF 17 37 5D B9 9C B4 CC 71 80 80 B3 D7";
 
 String twitchOAuthEndpoint = "https://id.twitch.tv/oauth2/token";
-const char *twitchOAuthFingerprint = "AC 27 C3 66 4E 3D 98 3C 11 48 05 6E 02 AC 68 DE B6 01 6D D6";
+const char *twitchOAuthFingerprint = "AC 23 8F 27 6B 26 04 55 1F B2 E9 8F B4 09 D3 E9 56 93 96 CF";
 
 String twitchOAuthToken = "";
 
